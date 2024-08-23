@@ -3,206 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D SCADA System</title>
+    <title>Water Pump Simulation</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-        #ui {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 100;
-            color: white;
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
-        button {
-            padding: 10px;
-            font-size: 16px;
+        #container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            z-index: 100;
+        }
+        #waterPercentage {
+            font-size: 20px;
+        }
+        #startPump {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
             cursor: pointer;
-            margin-right: 10px;
+            margin-top: 10px;
+        }
+        #startPump:active {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
-    <div id="ui">
-        <button id="pump1Switch">Pump 1</button>
-        <button id="pump2Switch">Pump 2</button>
-        <button id="pump3Switch">Pump 3</button>
-        <p>Water Level Tank 1: <span id="waterLevel1">0%</span></p>
-        <p>Water Level Tank 2: <span id="waterLevel2">0%</span></p>
-        <p>Water Level Tank 3: <span id="waterLevel3">0%</span></p>
+    <div id="container">
+        <div id="waterPercentage">Water Level: 0%</div>
+        <button id="startPump">Start Pump</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <script>
-        // Set up the scene, camera, and renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        let scene, camera, renderer, waterTank, water, pump, valve, waterLevel = 0;
+        let isPumping = false;
 
-        // Orbit controls for mouse interaction
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        init();
 
-        // Create a building
-        const buildingGeometry = new THREE.BoxGeometry(10, 20, 10);
-        const buildingMaterial = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
-        const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
-        building.position.set(0, 10, 0);
-        scene.add(building);
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
 
-        // Create tanks
-        const tankGeometry = new THREE.CylinderGeometry(3, 3, 6, 32);
-        const tankMaterial = new THREE.MeshPhongMaterial({ color: 0x00aaff, transparent: true, opacity: 0.5 });
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
 
-        const tank1 = new THREE.Mesh(tankGeometry, tankMaterial);
-        tank1.position.set(-20, 3, 0);
-        scene.add(tank1);
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-        const tank2 = new THREE.Mesh(tankGeometry, tankMaterial);
-        tank2.position.set(0, 20, 10);
-        scene.add(tank2);
+            // Light
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(5, 5, 5).normalize();
+            scene.add(light);
 
-        const tank3 = new THREE.Mesh(tankGeometry, tankMaterial);
-        tank3.position.set(20, 3, 10);
-        scene.add(tank3);
+            // Water Tank
+            const tankGeometry = new THREE.CylinderGeometry(1, 1, 2, 32);
+            const tankMaterial = new THREE.MeshStandardMaterial({ color: 0x0077be, wireframe: true });
+            waterTank = new THREE.Mesh(tankGeometry, tankMaterial);
+            scene.add(waterTank);
 
-        // Create water inside tanks
-        const waterMaterial = new THREE.MeshPhongMaterial({ color: 0x0044aa });
+            // Water inside tank
+            const waterGeometry = new THREE.CylinderGeometry(0.95, 0.95, 0, 32);
+            const waterMaterial = new THREE.MeshStandardMaterial({ color: 0x1E90FF, transparent: true, opacity: 0.7 });
+            water = new THREE.Mesh(waterGeometry, waterMaterial);
+            scene.add(water);
 
-        const water1 = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.1, 32), waterMaterial);
-        water1.position.set(-20, 0.1, 0);
-        scene.add(water1);
+            // Pump
+            const pumpGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+            const pumpMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
+            pump = new THREE.Mesh(pumpGeometry, pumpMaterial);
+            pump.position.set(2, -0.75, 0);
+            scene.add(pump);
 
-        const water2 = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.1, 32), waterMaterial);
-        water2.position.set(0, 17.5, 10);
-        scene.add(water2);
+            // Valve
+            const valveGeometry = new THREE.CylinderGeometry(0.15, 0.15, 1, 32);
+            const valveMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
+            valve = new THREE.Mesh(valveGeometry, valveMaterial);
+            valve.rotation.z = Math.PI / 2;
+            valve.position.set(1.5, -0.75, 0);
+            scene.add(valve);
 
-        const water3 = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.1, 32), waterMaterial);
-        water3.position.set(20, 0.1, 10);
-        scene.add(water3);
+            // Start pump button
+            document.getElementById('startPump').addEventListener('click', function() {
+                if (!isPumping) {
+                    isPumping = true;
+                    pumpWater();
+                }
+            });
 
-        // Create pumps
-        const pumpGeometry = new THREE.BoxGeometry(3, 3, 3);
-        const pumpMaterial = new THREE.MeshPhongMaterial({ color: 0x555555 });
+            animate();
+        }
 
-        const pump1 = new THREE.Mesh(pumpGeometry, pumpMaterial);
-        pump1.position.set(-10, 1.5, 0);
-        scene.add(pump1);
+        function pumpWater() {
+            if (waterLevel < 100) {
+                waterLevel += 1;
+                water.scale.y = waterLevel / 50; // Adjusting water height
+                water.position.y = -1 + waterLevel / 100; // Moving water up
+                document.getElementById('waterPercentage').textContent = `Water Level: ${waterLevel}%`;
+                setTimeout(pumpWater, 100); // Pump speed
+            } else {
+                isPumping = false;
+            }
+        }
 
-        const pump2 = new THREE.Mesh(pumpGeometry, pumpMaterial);
-        pump2.position.set(10, 1.5, 0);
-        scene.add(pump2);
-
-        const pump3 = new THREE.Mesh(pumpGeometry, pumpMaterial);
-        pump3.position.set(30, 1.5, 0);
-        scene.add(pump3);
-
-        // Create pipes
-        const pipeMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
-
-        const pipe1 = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 10, 32), pipeMaterial);
-        pipe1.rotation.z = Math.PI / 2;
-        pipe1.position.set(-15, 1.5, 0);
-        scene.add(pipe1);
-
-        const pipe2 = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 10, 32), pipeMaterial);
-        pipe2.position.set(0, 10, 0);
-        scene.add(pipe2);
-
-        const pipe3 = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 10, 32), pipeMaterial);
-        pipe3.position.set(10, 10, 10);
-        scene.add(pipe3);
-
-        // Create valves
-        const valveGeometry = new THREE.TorusGeometry(1, 0.3, 16, 100);
-        const valveMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-
-        const valve1 = new THREE.Mesh(valveGeometry, valveMaterial);
-        valve1.position.set(-10, 3, 0);
-        valve1.rotation.x = Math.PI / 2;
-        scene.add(valve1);
-
-        const valve2 = new THREE.Mesh(valveGeometry, valveMaterial);
-        valve2.position.set(10, 3, 0);
-        valve2.rotation.x = Math.PI / 2;
-        scene.add(valve2);
-
-        const valve3 = new THREE.Mesh(valveGeometry, valveMaterial);
-        valve3.position.set(30, 3, 0);
-        valve3.rotation.x = Math.PI / 2;
-        scene.add(valve3);
-
-        // Add lights
-        const ambientLight = new THREE.AmbientLight(0x606060);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 10, 7.5).normalize();
-        scene.add(directionalLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-        pointLight.position.set(0, 20, 20);
-        scene.add(pointLight);
-
-        // Set the camera position
-        camera.position.set(0, 30, 50);
-        controls.update();
-
-        // Variables for water filling logic
-        let waterLevel1 = 0;
-        let waterLevel2 = 0;
-        let waterLevel3 = 0;
-        let pump1On = false;
-        let pump2On = false;
-        let pump3On = false;
-
-        // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-
-            if (pump1On && waterLevel1 < 100) {
-                waterLevel1 += 0.1;
-                water1.scale.y = waterLevel1 / 10;
-                water1.position.y = -3 + waterLevel1 / 10;
-                document.getElementById('waterLevel1').innerText = `${Math.round(waterLevel1)}%`;
-            }
-
-            if (pump2On && waterLevel2 < 100) {
-                waterLevel2 += 0.1;
-                water2.scale.y = waterLevel2 / 10;
-                water2.position.y = 10 + waterLevel2 / 10;
-                document.getElementById('waterLevel2').innerText = `${Math.round(waterLevel2)}%`;
-            }
-
-            if (pump3On && waterLevel3 < 100) {
-                waterLevel3 += 0.1;
-                water3.scale.y = waterLevel3 / 10;
-                water3.position.y = -3 + waterLevel3 / 10;
-                document.getElementById('waterLevel3').innerText = `${Math.round(waterLevel3)}%`;
-            }
-
-            controls.update();
+            waterTank.rotation.y += 0.01;
+            pump.rotation.y += 0.01;
+            valve.rotation.y += 0.01;
             renderer.render(scene, camera);
         }
-        animate();
-
-        // Event listeners for pump switches
-        document.getElementById('pump1Switch').addEventListener('click', () => {
-            pump1On = !pump1On;
-            document.getElementById('pump1Switch').innerText = pump1On ? 'Turn Off Pump 1' : 'Turn On Pump 1';
-        });
-
-        document.getElementById('pump2Switch').addEventListener('click', () => {
-            pump2On = !pump2On;
-            document.getElementById('pump2Switch').innerText = pump2On ? 'Turn Off Pump 2' : 'Turn On Pump 2';
-        });
-
-        document.getElementById('pump3Switch').addEventListener('click', () => {
-            pump3On = !pump3On;
-            document.getElementById('pump3Switch').innerText = pump3On ? 'Turn Off Pump 3' : 'Turn On Pump 3';
-        });
-
     </script>
 </body>
 </html>
