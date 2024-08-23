@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D SCADA System Model</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            perspective: 1000px;
+            width: 600px;
+            height: 400px;
+            position: relative;
+        }
+        .system {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(20deg) rotateY(20deg);
+            transform-style: preserve-3d;
+            width: 400px;
+            height: 300px;
+        }
+        .tank, .pipe, .pump, .valve {
+            position: absolute;
+            background-color: lightblue;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .tank {
+            width: 100px;
+            height: 150px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .pipe {
+            width: 200px;
+            height: 20px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+        .pump {
+            width: 50px;
+            height: 50px;
+            bottom: 50px;
+            left: 50px;
+        }
+        .valve {
+            width: 30px;
+            height: 30px;
+            bottom: 60px;
+            right: 50px;
+        }
+        .water-flow {
+            position: absolute;
+            width: 0;
+            height: 20px;
+            top: 50%;
+            left: 0;
+            background: linear-gradient(90deg, lightblue, blue);
+            animation: flow 2s linear infinite;
+        }
+        @keyframes flow {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="system">
+        <div class="tank"></div>
+        <div class="pipe">
+            <div class="water-flow"></div>
+        </div>
+        <div class="pump"></div>
+        <div class="valve"></div>
+    </div>
+</div>
+
+<script>
+    // Add any additional JavaScript functionality if needed
+</script>
+
+</body>
+</html>
