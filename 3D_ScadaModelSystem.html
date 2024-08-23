@@ -3,115 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D SCADA System Interface</title>
+    <title>3D SCADA Water Pump System</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            position: relative;
-            width: 800px;
-            height: 400px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            perspective: 1000px;
-        }
-
-        .control-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 150px;
-            height: 300px;
-            background-color: #ccc;
-            border-radius: 10px;
-            transform: rotateY(20deg);
-            transform-origin: left;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .button {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: #fff;
-            border: 2px solid #333;
-            border-radius: 50%;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-
-        .button.red {
-            background-color: red;
-            top: 20px;
-            left: 50px;
-        }
-
-        .button.green {
-            background-color: green;
-            top: 80px;
-            left: 50px;
-        }
-
-        .button.yellow {
-            background-color: yellow;
-            top: 140px;
-            left: 50px;
-        }
-
-        .selector-switch {
-            position: absolute;
-            bottom: 30px;
-            left: 50px;
-            width: 50px;
-            height: 20px;
-            background-color: #444;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .tank {
-            position: absolute;
-            right: 100px;
-            bottom: 50px;
-            width: 200px;
-            height: 150px;
-            background-color: #a8d3ea;
-            border-radius: 20px;
-            box-shadow: inset 0px -5px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .dial {
-            position: absolute;
-            right: 150px;
-            top: 100px;
-            width: 70px;
-            height: 70px;
-            background-color: #fff;
-            border: 3px solid #333;
-            border-radius: 50%;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-        }
+        body { margin: 0; }
+        canvas { display: block; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="control-panel">
-            <div class="button red"></div>
-            <div class="button green"></div>
-            <div class="button yellow"></div>
-            <div class="selector-switch"></div>
-        </div>
-        <div class="dial"></div>
-        <div class="tank"></div>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create a tank
+        const tankGeometry = new THREE.CylinderGeometry(5, 5, 10, 32);
+        const tankMaterial = new THREE.MeshPhongMaterial({color: 0x00aaff, wireframe: false});
+        const tank = new THREE.Mesh(tankGeometry, tankMaterial);
+        tank.position.set(0, 5, 0);
+        scene.add(tank);
+
+        // Create a pump
+        const pumpGeometry = new THREE.BoxGeometry(3, 3, 3);
+        const pumpMaterial = new THREE.MeshPhongMaterial({color: 0x555555});
+        const pump = new THREE.Mesh(pumpGeometry, pumpMaterial);
+        pump.position.set(10, 1.5, 0);
+        scene.add(pump);
+
+        // Create pipes
+        const pipeGeometry = new THREE.CylinderGeometry(0.5, 0.5, 10, 32);
+        const pipeMaterial = new THREE.MeshPhongMaterial({color: 0x888888});
+        const pipe1 = new THREE.Mesh(pipeGeometry, pipeMaterial);
+        pipe1.rotation.z = Math.PI / 2;
+        pipe1.position.set(5, 1.5, 0);
+        scene.add(pipe1);
+
+        const pipe2 = new THREE.Mesh(pipeGeometry, pipeMaterial);
+        pipe2.position.set(0, -4.5, 0);
+        scene.add(pipe2);
+
+        // Add lights
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 10, 7.5);
+        scene.add(directionalLight);
+
+        // Set the camera position
+        camera.position.z = 20;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate the pump to simulate operation
+            pump.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
