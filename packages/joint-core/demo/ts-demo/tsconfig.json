@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "lib": [
+            "es6",
+            "dom"
+        ]
+    },
+    "compileOnSave": true
+}

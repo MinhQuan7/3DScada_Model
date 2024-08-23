@@ -1,0 +1,53 @@
+{
+  "name": "@joint/decorators",
+  "title": "JointJS Decorators",
+  "version": "4.0.4",
+  "description": "Decorators module for JointJS",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "homepage": "https://jointjs.com",
+  "author": {
+    "name": "client IO",
+    "url": "https://client.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clientIO/joint.git",
+    "directory": "packages/joint-decorators"
+  },
+  "bugs": {
+    "url": "https://github.com/clientIO/joint/issues"
+  },
+  "license": "MPL-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "echo \"Publishing via NPM is not allowed!\" && exit 1",
+    "prepack": "yarn run dist",
+    "build": "tsc",
+    "dist": "tsc"
+  },
+  "files": [
+    "build/",
+    "src/",
+    "./LICENSE",
+    "./SECURITY.md"
+  ],
+  "dependencies": {
+    "@joint/core": "workspace:~"
+  },
+  "devDependencies": {
+    "typescript": "4.8.4"
+  },
+  "volta": {
+    "node": "18.18.2",
+    "npm": "9.8.1",
+    "yarn": "3.4.1"
+  },
+  "keywords": [
+    "jointjs",
+    "shapes",
+    "decorators"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "joint",
+  "version": "4.0.4",
+  "sideEffects": false,
+  "homepage": "https://jointjs.com",
+  "author": {
+    "name": "client IO",
+    "url": "https://client.io"
+  },
+  "license": "MPL-2.0",
+  "private": true,
+  "scripts": {
+    "build": "yarn workspaces foreach -tvv run build",
+    "test": "yarn workspaces foreach -tvv run test",
+    "test-server": "yarn workspaces foreach -tvv run test-server",
+    "test-client": "yarn workspaces foreach -tvv run test-client",
+    "test-ts": "yarn workspaces foreach -tvv run test-ts",
+    "test-coverage": "yarn workspaces foreach -tvv run test-coverage",
+    "test-coverage-lcov": "yarn workspaces foreach -tvv run test-coverage-lcov",
+    "test-bundles": "yarn workspaces foreach -tvv run test-bundles",
+    "build-bundles": "yarn workspaces foreach -tvv run build-bundles",
+    "test-e2e": "yarn workspaces foreach -tvv run test-e2e",
+    "test-e2e-all": "yarn workspaces foreach -tvv run test-e2e-all",
+    "lint": "yarn workspaces foreach -tvv run lint",
+    "lint-fix": "yarn workspaces foreach -tvv run lint-fix",
+    "dist": "yarn workspaces foreach -tvv run dist",
+    "build-docs": "yarn workspaces foreach -tvv run build-docs",
+    "pack-all": "yarn workspaces foreach -tvv --include \"@joint/layout-directed-graph\" --include \"@joint/core\" pack --out %s-%v.tgz"
+  },
+  "workspaces": [
+    "./packages/*",
+    "./examples/*"
+  ],
+  "volta": {
+    "node": "18.18.2",
+    "npm": "9.8.1",
+    "yarn": "3.4.1"
+  },
+  "packageManager": "yarn@3.4.1"
+}
