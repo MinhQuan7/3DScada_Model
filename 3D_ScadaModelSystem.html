@@ -69,18 +69,18 @@
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
-            // Water Tank
+            // Water Tank (Transparent)
             const tankGeometry = new THREE.CylinderGeometry(1, 1, 2, 32);
-            const tankMaterial = new THREE.MeshStandardMaterial({ color: 0x0077be, wireframe: true });
+            const tankMaterial = new THREE.MeshStandardMaterial({ color: 0x0077be, transparent: true, opacity: 0.3 });
             waterTank = new THREE.Mesh(tankGeometry, tankMaterial);
             waterTank.position.set(0, 0, 0);
             scene.add(waterTank);
 
             // Water inside tank
-            const waterGeometry = new THREE.CylinderGeometry(0.95, 0.95, 0, 32);
-            const waterMaterial = new THREE.MeshStandardMaterial({ color: 0x1E90FF, transparent: true, opacity: 0.7 });
+            const waterGeometry = new THREE.CylinderGeometry(0.95, 0.95, 1.95, 32, 1, false);
+            const waterMaterial = new THREE.MeshStandardMaterial({ color: 0x1E90FF, transparent: true, opacity: 0.8 });
             water = new THREE.Mesh(waterGeometry, waterMaterial);
-            water.position.set(0, -1, 0);
+            water.position.set(0, -0.975, 0);
             scene.add(water);
 
             // Pump
@@ -120,16 +120,8 @@
         function pumpWater() {
             if (waterLevel < 100) {
                 waterLevel += 1;
-                water.scale.y = waterLevel / 50; // Adjusting water height
-                water.position.y = -1 + waterLevel / 100; // Moving water up
-
-                // Add water flow effect
-                const waterEffectGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.5, 32);
-                const waterEffectMaterial = new THREE.MeshStandardMaterial({ color: 0x1E90FF, transparent: true, opacity: 0.5 });
-                const waterEffect = new THREE.Mesh(waterEffectGeometry, waterEffectMaterial);
-                waterEffect.position.set(1, -1 + waterLevel / 200, 0);
-                scene.add(waterEffect);
-
+                water.scale.y = waterLevel / 100; // Adjusting water height
+                water.position.y = -1 + (waterLevel / 100); // Moving water up
                 document.getElementById('waterPercentage').textContent = `Water Level: ${waterLevel}%`;
                 setTimeout(pumpWater, 100); // Pump speed
             } else {
