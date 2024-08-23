@@ -3,14 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D SCADA Water Pump System</title>
+    <title>3D Water Pump System</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            color: white;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div id="ui">
+        <button id="pumpSwitch">Turn On Pump</button>
+        <p>Water Level: <span id="waterLevel">0%</span></p>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <script>
         // Set up the scene, camera, and renderer
         const scene = new THREE.Scene();
@@ -19,31 +36,49 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Create a tank
+        // Orbit controls for mouse interaction
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Create a cylindrical tank
         const tankGeometry = new THREE.CylinderGeometry(5, 5, 10, 32);
-        const tankMaterial = new THREE.MeshPhongMaterial({color: 0x00aaff, wireframe: false});
+        const tankMaterial = new THREE.MeshPhongMaterial({ color: 0x00aaff, transparent: true, opacity: 0.5 });
         const tank = new THREE.Mesh(tankGeometry, tankMaterial);
-        tank.position.set(0, 5, 0);
+        tank.position.set(-10, 5, 0);
         scene.add(tank);
+
+        // Create water inside the tank
+        const waterGeometry = new THREE.CylinderGeometry(4.5, 4.5, 0.1, 32);
+        const waterMaterial = new THREE.MeshPhongMaterial({ color: 0x0044aa });
+        const water = new THREE.Mesh(waterGeometry, waterMaterial);
+        water.position.set(-10, 0.1, 0);
+        scene.add(water);
 
         // Create a pump
         const pumpGeometry = new THREE.BoxGeometry(3, 3, 3);
-        const pumpMaterial = new THREE.MeshPhongMaterial({color: 0x555555});
+        const pumpMaterial = new THREE.MeshPhongMaterial({ color: 0x555555 });
         const pump = new THREE.Mesh(pumpGeometry, pumpMaterial);
         pump.position.set(10, 1.5, 0);
         scene.add(pump);
 
         // Create pipes
         const pipeGeometry = new THREE.CylinderGeometry(0.5, 0.5, 10, 32);
-        const pipeMaterial = new THREE.MeshPhongMaterial({color: 0x888888});
+        const pipeMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
         const pipe1 = new THREE.Mesh(pipeGeometry, pipeMaterial);
         pipe1.rotation.z = Math.PI / 2;
-        pipe1.position.set(5, 1.5, 0);
+        pipe1.position.set(0, 1.5, 0);
         scene.add(pipe1);
 
         const pipe2 = new THREE.Mesh(pipeGeometry, pipeMaterial);
-        pipe2.position.set(0, -4.5, 0);
+        pipe2.position.set(-10, -2, 0);
         scene.add(pipe2);
+
+        // Create a valve
+        const valveGeometry = new THREE.TorusGeometry(1, 0.3, 16, 100);
+        const valveMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        const valve = new THREE.Mesh(valveGeometry, valveMaterial);
+        valve.position.set(-10, 3, 0);
+        valve.rotation.x = Math.PI / 2;
+        scene.add(valve);
 
         // Add lights
         const ambientLight = new THREE.AmbientLight(0x404040);
@@ -54,18 +89,34 @@
         scene.add(directionalLight);
 
         // Set the camera position
-        camera.position.z = 20;
+        camera.position.z = 30;
+
+        // Variables for water filling logic
+        let waterLevel = 0;
+        let pumpOn = false;
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
 
-            // Rotate the pump to simulate operation
-            pump.rotation.y += 0.01;
+            if (pumpOn && waterLevel < 100) {
+                waterLevel += 0.1;
+                water.scale.y = waterLevel / 10;
+                water.position.y = -5 + waterLevel / 10;
+                document.getElementById('waterLevel').innerText = `${Math.round(waterLevel)}%`;
+            }
 
+            controls.update();
             renderer.render(scene, camera);
         }
         animate();
+
+        // Event listener for pump switch
+        document.getElementById('pumpSwitch').addEventListener('click', () => {
+            pumpOn = !pumpOn;
+            document.getElementById('pumpSwitch').innerText = pumpOn ? 'Turn Off Pump' : 'Turn On Pump';
+        });
+
     </script>
 </body>
 </html>
