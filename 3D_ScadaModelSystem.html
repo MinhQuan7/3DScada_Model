@@ -53,7 +53,7 @@
 
             // Camera setup
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
+            camera.position.set(0, 1, 5);
 
             // Renderer setup
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -73,19 +73,21 @@
             const tankGeometry = new THREE.CylinderGeometry(1, 1, 2, 32);
             const tankMaterial = new THREE.MeshStandardMaterial({ color: 0x0077be, wireframe: true });
             waterTank = new THREE.Mesh(tankGeometry, tankMaterial);
+            waterTank.position.set(0, 0, 0);
             scene.add(waterTank);
 
             // Water inside tank
             const waterGeometry = new THREE.CylinderGeometry(0.95, 0.95, 0, 32);
             const waterMaterial = new THREE.MeshStandardMaterial({ color: 0x1E90FF, transparent: true, opacity: 0.7 });
             water = new THREE.Mesh(waterGeometry, waterMaterial);
+            water.position.set(0, -1, 0);
             scene.add(water);
 
             // Pump
             const pumpGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
             const pumpMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
             pump = new THREE.Mesh(pumpGeometry, pumpMaterial);
-            pump.position.set(2, -0.75, 0);
+            pump.position.set(2, -1, 0);
             scene.add(pump);
 
             // Valve
@@ -93,8 +95,16 @@
             const valveMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
             valve = new THREE.Mesh(valveGeometry, valveMaterial);
             valve.rotation.z = Math.PI / 2;
-            valve.position.set(1.5, -0.75, 0);
+            valve.position.set(1.25, -1, 0);
             scene.add(valve);
+
+            // Pipe connecting valve to tank
+            const pipeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 32);
+            const pipeMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
+            const pipe = new THREE.Mesh(pipeGeometry, pipeMaterial);
+            pipe.rotation.z = Math.PI / 2;
+            pipe.position.set(0.75, -1, 0);
+            scene.add(pipe);
 
             // Start pump button
             document.getElementById('startPump').addEventListener('click', function() {
@@ -112,6 +122,14 @@
                 waterLevel += 1;
                 water.scale.y = waterLevel / 50; // Adjusting water height
                 water.position.y = -1 + waterLevel / 100; // Moving water up
+
+                // Add water flow effect
+                const waterEffectGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.5, 32);
+                const waterEffectMaterial = new THREE.MeshStandardMaterial({ color: 0x1E90FF, transparent: true, opacity: 0.5 });
+                const waterEffect = new THREE.Mesh(waterEffectGeometry, waterEffectMaterial);
+                waterEffect.position.set(1, -1 + waterLevel / 200, 0);
+                scene.add(waterEffect);
+
                 document.getElementById('waterPercentage').textContent = `Water Level: ${waterLevel}%`;
                 setTimeout(pumpWater, 100); // Pump speed
             } else {
@@ -121,9 +139,6 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            waterTank.rotation.y += 0.01;
-            pump.rotation.y += 0.01;
-            valve.rotation.y += 0.01;
             renderer.render(scene, camera);
         }
 
