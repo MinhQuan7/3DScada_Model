@@ -3,98 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D SCADA System Model</title>
+    <title>3D SCADA System Interface</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
             margin: 0;
         }
+
         .container {
-            perspective: 1000px;
-            width: 600px;
-            height: 400px;
             position: relative;
+            width: 800px;
+            height: 400px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            perspective: 1000px;
         }
-        .system {
+
+        .control-panel {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotateX(20deg) rotateY(20deg);
-            transform-style: preserve-3d;
-            width: 400px;
+            top: 20px;
+            left: 20px;
+            width: 150px;
             height: 300px;
+            background-color: #ccc;
+            border-radius: 10px;
+            transform: rotateY(20deg);
+            transform-origin: left;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
         }
-        .tank, .pipe, .pump, .valve {
+
+        .button {
             position: absolute;
-            background-color: lightblue;
-            border: 2px solid #333;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        .tank {
-            width: 100px;
-            height: 150px;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .pipe {
-            width: 200px;
-            height: 20px;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-        }
-        .pump {
             width: 50px;
             height: 50px;
-            bottom: 50px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 50%;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .button.red {
+            background-color: red;
+            top: 20px;
             left: 50px;
         }
-        .valve {
-            width: 30px;
-            height: 30px;
-            bottom: 60px;
-            right: 50px;
+
+        .button.green {
+            background-color: green;
+            top: 80px;
+            left: 50px;
         }
-        .water-flow {
+
+        .button.yellow {
+            background-color: yellow;
+            top: 140px;
+            left: 50px;
+        }
+
+        .selector-switch {
             position: absolute;
-            width: 0;
+            bottom: 30px;
+            left: 50px;
+            width: 50px;
             height: 20px;
-            top: 50%;
-            left: 0;
-            background: linear-gradient(90deg, lightblue, blue);
-            animation: flow 2s linear infinite;
+            background-color: #444;
+            border-radius: 10px;
+            cursor: pointer;
         }
-        @keyframes flow {
-            0% {
-                width: 0;
-            }
-            100% {
-                width: 200px;
-            }
+
+        .tank {
+            position: absolute;
+            right: 100px;
+            bottom: 50px;
+            width: 200px;
+            height: 150px;
+            background-color: #a8d3ea;
+            border-radius: 20px;
+            box-shadow: inset 0px -5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .dial {
+            position: absolute;
+            right: 150px;
+            top: 100px;
+            width: 70px;
+            height: 70px;
+            background-color: #fff;
+            border: 3px solid #333;
+            border-radius: 50%;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="system">
-        <div class="tank"></div>
-        <div class="pipe">
-            <div class="water-flow"></div>
+    <div class="container">
+        <div class="control-panel">
+            <div class="button red"></div>
+            <div class="button green"></div>
+            <div class="button yellow"></div>
+            <div class="selector-switch"></div>
         </div>
-        <div class="pump"></div>
-        <div class="valve"></div>
+        <div class="dial"></div>
+        <div class="tank"></div>
     </div>
-</div>
-
-<script>
-    // Add any additional JavaScript functionality if needed
-</script>
-
 </body>
 </html>
