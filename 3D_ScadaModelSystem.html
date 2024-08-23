@@ -3,166 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCADA: Piping & Instrumentation Diagram</title>
+    <title>Your Project Title</title>
     <style>
-        :root {
-            --accent-color: #0075f2;
-            --text-color: #131e29;
-            --liquid-color: #f6f740;
-        }
+:root {
+  --accent-color: #0075f2;
+  --text-color: #131e29;
+  --liquid-color: #f6f740;
+}
 
-        /* Switch */
-        .jj-switch {
-            font-family: sans-serif;
-            font-size: 14px;
-            width: 100%;
-            height: 100%;
-            background: white;
-            border: 1px solid #cad8e3;
-            position: static;
-            padding: 3px;
-            box-sizing: border-box;
-            border-radius: 4px;
-            color: var(--text-color);
-        }
+/* Switch */
 
-        .jj-switch-label {
-            width: 100%;
-            text-align: center;
-            margin: 0 0 2px 0;
-        }
+.jj-switch {
+  font-family: sans-serif;
+  font-size: 14px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: 1px solid #cad8e3;
+  position: static;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: var(--text-color);
+}
 
-        .jj-switch-on {
-            background: var(--accent-color);
-            color: #dde6ed;
-            border-radius: 4px 0 0 4px;
-            border: 1px solid var(--accent-color);
-            width: 50%;
-            height: 22px;
-        }
+.jj-switch-label {
+  width: 100%;
+  text-align: center;
+  margin: 0 0 2px 0;
+}
 
-        .jj-switch-off {
-            background: #131e29;
-            color: #dde6ed;
-            border-radius: 0 4px 4px 0;
-            border: 1px solid #131e29;
-            width: 50%;
-            height: 22px;
-        }
-        .jj-switch-on:disabled,
-        .jj-switch-off:disabled {
-            background: #f2f5f8;
-            color: #cad8e3;
-            border: 1px solid #cad8e3;
-        }
+.jj-switch-on {
+  background: var(--accent-color);
+  color: #dde6ed;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid var(--accent-color);
+  width: 50%;
+  height: 22px;
+}
 
-        /* Checkbox */
-        .jj-checkbox {
-            width: 100%;
-            height: 100%;
-            background: white;
-            border: 1px solid #cad8e3;
-            position: static;
-            box-sizing: border-box;
-            border-radius: 4px;
-        }
+.jj-switch-off {
+  background: #131e29;
+  color: #dde6ed;
+  border-radius: 0 4px 4px 0;
+  border: 1px solid #131e29;
+  width: 50%;
+  height: 22px;
+}
+.jj-switch-on:disabled,
+.jj-switch-off:disabled {
+  background: #f2f5f8;
+  color: #cad8e3;
+  border: 1px solid #cad8e3;
+}
 
-        .jj-checkbox-input {
-            accent-color: var(--accent-color);
-        }
+/* Checkbox */
 
-        /* Slider */
-        .jj-slider {
-            font-family: sans-serif;
-            font-size: 14px;
-            width: 100%;
-            height: 100%;
-            background: white;
-            border: 1px solid #cad8e3;
-            position: static;
-            box-sizing: border-box;
-            border-radius: 4px;
-            padding: 3px;
-            color: var(--text-color);
-        }
+.jj-checkbox {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: 1px solid #cad8e3;
+  position: static;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
 
-        .jj-slider-input {
-            accent-color: var(--accent-color);
-        }
+.jj-checkbox-input {
+  accent-color: var(--accent-color);
+}
 
-        .jj-slider-label {
-            width: 100%;
-            text-align: center;
-            white-space: pre;
-        }
+/* Slider */
 
-        .jj-slider-output {
-            width: 100%;
-            text-align: center;
-            white-space: pre;
-            display: block;
-            font-size: 11px;
-            color: #40668c;
-        }
+.jj-slider {
+  font-family: sans-serif;
+  font-size: 14px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: 1px solid #cad8e3;
+  position: static;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 3px;
+  color: var(--text-color);
+}
 
-        /* Application */
-        #paper-container {
-            position: absolute;
-            inset: 0 0 0 0;
-        }
+.jj-slider-input {
+  accent-color: var(--accent-color);
+}
 
-        #logo {
-            position: absolute;
-            top: 20px;
-            right: 0;
-        }
+.jj-slider-label {
+  width: 100%;
+  text-align: center;
+  white-space: pre;
+}
 
-        #toolbar-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-family: sans-serif;
-            color: var(--text-color);
-            accent-color: var(--accent-color);
-        }
+.jj-slider-output {
+  width: 100%;
+  text-align: center;
+  white-space: pre;
+  display: block;
+  font-size: 11px;
+  color: #40668c;
+}
 
-        #toolbar-container [data-name="title"] {
-            font-weight: 900;
-        }
+/* Application */
+
+#paper-container {
+  position: absolute;
+  inset: 0 0 0 0;
+}
+
+#logo {
+  position: absolute;
+  top: 20px;
+  right: 0;
+}
+
+#toolbar-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-family: sans-serif;
+  color: var(--text-color);
+  accent-color: var(--accent-color);
+}
+
+#toolbar-container [data-name="title"] {
+  font-weight: 900;
+}
     </style>
 </head>
 <body>
     <div id="paper-container"></div>
     <div id="toolbar-container"></div>
     <a target="_blank" href="https://www.jointjs.com">
-        <img id="logo" src="https://assets.codepen.io/7589991/jj-logo-red.svg" width="200" height="50"></img>
+      <img id="logo" src="https://assets.codepen.io/7589991/jj-logo-red.svg" width="200" height="50"></img>
     </a>
-    
     <script>
-        const { dia, shapes, util, ui } = joint;
+const { dia, shapes, util, ui } = joint;
 
-        const paperContainerEl = document.getElementById("paper-container");
-        const toolbarContainerEl = document.getElementById("toolbar-container");
+const paperContainerEl = document.getElementById("paper-container");
+const toolbarContainerEl = document.getElementById("toolbar-container");
 
-        const POWER_FLAG = "POWER";
-        const LIGHT_FLAG = "LIGHT";
-        const FLOW_FLAG = "FLOW";
-        const OPEN_FLAG = "OPEN";
+// Custom view flags
+const POWER_FLAG = "POWER";
+const LIGHT_FLAG = "LIGHT";
+const FLOW_FLAG = "FLOW";
+const OPEN_FLAG = "OPEN";
 
-        const LIQUID_COLOR = "#0EAD69";
-        const MAX_LIQUID_COLOR = "#ED2637";
-        const MIN_LIQUID_COLOR = "#FFD23F";
-        const START_LIQUID = 70;
-        const PRESSURE_COLOR = "#1446A0";
-        const MAX_PRESSURE_COLOR = "#ED2637";
+// Constants
+const LIQUID_COLOR = "#0EAD69";
+const MAX_LIQUID_COLOR = "#ED2637";
+const MIN_LIQUID_COLOR = "#FFD23F";
+const START_LIQUID = 70;
+const PRESSURE_COLOR = "#1446A0";
+const MAX_PRESSURE_COLOR = "#ED2637";
 
-        document.documentElement.style.setProperty("--liquid-color", LIQUID_COLOR);
+document.documentElement.style.setProperty("--liquid-color", LIQUID_COLOR);
 
-        const r = 30;
-        const d = 10;
-        const l = (3 * r) / 4;
-        const step = 20;
-        class Pump extends dia.Element {
+// Pump metrics
+const r = 30;
+const d = 10;
+const l = (3 * r) / 4;
+const step = 20;
+
+class Pump extends dia.Element {
   defaults() {
     return {
       ...super.defaults,
@@ -2105,7 +2112,6 @@ setInterval(function () {
     { valueFunction: util.interpolate.hexColor, duration: 1000 }
   );
 }, 1000);
-
     </script>
 </body>
 </html>
